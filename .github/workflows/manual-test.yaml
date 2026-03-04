@@ -1,0 +1,17 @@
+name: Test Manual Branch Selection
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Print selected branch
+        run: |
+          echo "Workflow triggered manually"
+          echo "Selected branch is: ${{ github.ref_name }}"
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Show branch after checkout
+        run: |
+          echo "Current checked-out branch:"
+          git branch
