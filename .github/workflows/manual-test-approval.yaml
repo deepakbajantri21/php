@@ -1,0 +1,34 @@
+name: Test Manual Branch Selection
+
+on:
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Print selected branch
+        run: |
+          echo "Workflow triggered manually"
+          echo "Selected branch is: ${{ github.ref_name }}"
+
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Show branch after checkout
+        run: |
+          echo "Current checked-out branch:"
+          git branch
+
+  deploy:
+    needs: test
+    runs-on: ubuntu-latest
+    environment: beta
+
+    steps:
+      - name: Simulate deployment
+        run: |
+          echo "Deployment job started"
+          echo "This job requires approval for environment: beta"
+          echo "Selected branch is: ${{ github.ref_name }}"
