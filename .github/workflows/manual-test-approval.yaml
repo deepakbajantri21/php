@@ -1,4 +1,4 @@
-name: Test Manual Branch Selection
+name: Test Manual Branch Selection and with cd approval
 
 on:
   workflow_dispatch:
