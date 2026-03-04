@@ -15,3 +15,20 @@ jobs:
         with:
           name: app-package
           path: app.zip
+     deploy:
+      needs: build
+      runs-on: ubuntu-latest
+      environment: beta
+
+     steps:
+      - name: Download artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: app-package
+
+      - name: Show downloaded files
+        run: |
+           echo "Deployment started after approval"
+           pwd
+           echo "Listing files:"
+           ls -al
