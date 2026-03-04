@@ -1,0 +1,36 @@
+name: CI-CD pipeline with pkgs
+on:
+  workflow_dispatch:
+jobs:
+  build:
+    runs-on: [self-hosted, github-actions-beta]
+    steps:
+      - name: Checkout selected branch
+        uses: actions/checkout@v4
+        with:
+          clean: true
+      - name: Install dependencies
+        run: |
+          composer install --no-dev --optimize-autoloader
+      - name: Package application
+        run: |
+          zip -r release.zip . -x "*.git*"
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: php_app
+          path: release.zip
+
+  deploy:
+    runs-on: [self-hosted, linux]
+    needs: build
+    environment: beta
+    steps:
+      - name: Download artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: php_app
+      - name: Deploy application
+        run: |
+          rm -rf /home/jadmin/_work/*
+          unzip release.zip -d /home/jadmin/_work
