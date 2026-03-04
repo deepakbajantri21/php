@@ -24,9 +24,22 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: app-package
-      - name: Show downloaded files
-        run: |
-          echo "Deployment started after approval"
-          pwd
-          echo "Listing files:"
-          ls -al
+      - name: Copy ZIP to VM
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          password: ${{ secrets.PASSWORD }}
+          source: "app.zip"
+          target: "/home/jadmin/_work"
+
+      - name: Extract application on VM
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          password: ${{ secrets.PASSWORD }}
+          script: |
+            cd /home/jadmin/_work
+            unzip -o app.zip
+            rm app.zip
